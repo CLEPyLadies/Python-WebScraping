@@ -25,7 +25,7 @@ chrome_options = Options()
 
 # Chrome Options -------------------------------------:
 
-chrome_options.add_argument('incognito') ## Opens Chrome in incognito mode
+chrome_options.add_argument('incognito')  ## Opens Chrome in incognito mode
 # chrome_options.add_experimental_option("detach", False) ## chromedriver will stay open afterward
 # chrome_options.add_argument('--headless') ## chrome window will not pop up
 
@@ -37,7 +37,7 @@ driver = webdriver.Chrome(options=chrome_options)
 # driver.get('https://www.google.com/')  # testing
 
 amazon_base_url = "https://www.amazon.com"
-lindt ='B07BNNQJSL' # Amazon product code
+lindt = 'B07BNNQJSL'  # Amazon product code
 product = 'B076B7V2QJ'
 
 amazon_product_url = amazon_base_url + "/dp/" + product
@@ -45,7 +45,7 @@ driver.get(amazon_product_url)
 
 time.sleep(2)  # imp to sleep
 
-page_title = driver.title # get webpage title
+page_title = driver.title  # get webpage title
 
 # print(page_title)
 
@@ -76,8 +76,7 @@ soup = BeautifulSoup(html2, "html.parser")
 
 rev_html = soup.find_all("div", {'data-hook': "review"})
 
-rev_string = str(rev_html)
-
+Rev_String = str(rev_html)
 
 product_name = soup.find("a", {'data-hook': "product-link"}).text.strip("\n")
 reviews_title = soup.find("a", {'data-hook': "review-title"}).text.strip("\n")
@@ -92,6 +91,3 @@ print(f'reviews_date: {reviews_date}')
 print(f'reviews_stars: {reviews_stars}')
 
 # driver.quit()   # closes the browser
-
-
-

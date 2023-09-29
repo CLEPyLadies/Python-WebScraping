@@ -26,8 +26,8 @@ chrome_options = Options()
 # Chrome Options -------------------------------------:
 
 chrome_options.add_argument('incognito') ## Opens Chrome in incognito mode
-chrome_options.add_experimental_option("detach", False) ## chromedriver will stay open afterward
-chrome_options.add_argument('--headless') ## chrome window will not pop up
+# chrome_options.add_experimental_option("detach", False) ## chromedriver will stay open afterward
+# chrome_options.add_argument('--headless') ## chrome window will not pop up
 
 # starting code -----------------------------------------:
 # selenium Documentaion:
@@ -57,8 +57,8 @@ html_page_source = driver.page_source
 # print(html_page_source)
 soup = BeautifulSoup(html_page_source, "html.parser")
 
-print(soup.prettify())
-print(soup.get_text())
+# print(soup.prettify())
+# print(soup.get_text())
 
 # 2 -  Get Review Link
 review_link = soup.find("a", {'data-hook': "see-all-reviews-link-foot"})
@@ -95,4 +95,3 @@ print(f'reviews_stars: {reviews_stars}')
 
 
 
-driver.quit()   # closes the browser

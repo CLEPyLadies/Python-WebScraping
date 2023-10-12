@@ -4,7 +4,7 @@
 # Project Dependency :
     # pip install selenium
     # pip install webdriver_manager
-    # pip install c
+    # pip install beautifulsoup4
 """
 import time
 from selenium import webdriver

@@ -1,93 +1,98 @@
-## Packges Needed:
-## pip install selenium
-## pip install webdriver_manager
-## pip install beautifulsoup4
 
-##############
 """
+@author: Engy Tawadros
 # Project Dependency :
     # pip install selenium
     # pip install webdriver_manager
-    # pip install beautifulsoup4
+    # pip install c
 """
 import time
-
 from selenium import webdriver
-
-from bs4 import BeautifulSoup
-
 from selenium.webdriver.chrome.options import Options
 
-chrome_options = Options()
-## For more Chrom Options:
-# https://www.guru99.com/chrome-options-desiredcapabilities.html#:~:text=The%20Chromeoptions%20Class%20is%20a,for%20customizing%20Chrome%20driver%20sessions.
+from selenium.webdriver.common.by import By
+from bs4 import BeautifulSoup
 
 
 # Chrome Options -------------------------------------:
+chrome_options = Options()
 
 chrome_options.add_argument('incognito')  ## Opens Chrome in incognito mode
 # chrome_options.add_experimental_option("detach", False) ## chromedriver will stay open afterward
 # chrome_options.add_argument('--headless') ## chrome window will not pop up
 
-# starting code -----------------------------------------:
-# selenium Documentaion:
-# https://selenium-python.readthedocs.io/getting-started.html
+#### ----------------------------------------->
 
 driver = webdriver.Chrome(options=chrome_options)
 # driver.get('https://www.google.com/')  # testing
 
 amazon_base_url = "https://www.amazon.com"
-lindt = 'B07BNNQJSL'  # Amazon product code
-product = 'B076B7V2QJ'
+#product = 'B07BNNQJSL'  # lindt
+product = 'B00NGKWYS2' # Cadbury Dairy Milk
 
 amazon_product_url = amazon_base_url + "/dp/" + product
 driver.get(amazon_product_url)
 
-time.sleep(2)  # imp to sleep
+time.sleep(3)  # imp to sleep
 
 page_title = driver.title  # get webpage title
+print('\n'+page_title)
 
-# print(page_title)
-
-##################
-##  Beautiful Soup Documentation
-# https://www.crummy.com/software/BeautifulSoup/bs4/doc/
-#
+#################### {page_source} ##################
 html_page_source = driver.page_source
 # print(html_page_source)
-soup = BeautifulSoup(html_page_source, "html.parser")
 
+##################  Beautiful Soup  #############
+##  Beautiful Soup Documentation
+# https://www.crummy.com/software/BeautifulSoup/bs4/doc/
+
+soup = BeautifulSoup(html_page_source, "html.parser")
+# print(soup)
 # print(soup.prettify())
 # print(soup.get_text())
 
-# 2 -  Get Review Link
+################## 2 -  Get Review Link #################
 review_link = soup.find("a", {'data-hook': "see-all-reviews-link-foot"})
 review_link = review_link['href']
-# print(review_link)
+print(review_link)
 
-# 3- Open Reviews page
+################## 3- Open Reviews page #################
+
 reviews_url = amazon_base_url + review_link
 driver.get(reviews_url)
-# print(reviews_url)
+# # print(reviews_url)
 html2 = driver.page_source
 soup = BeautifulSoup(html2, "html.parser")
 
-###########################
+################################################################################################
+print('2 ways to pasrse the data:')
+# print(soup.find('i',{'data-hook': "review-star-rating"} ))
+print(soup.find("a", {'data-hook': "product-link"}).text)
+print(driver.find_element("xpath", '//*[@id="cm_cr-product_info"]/div/div[2]/div/div/div[2]/div[1]/h1/a').text)
+print('-------------------------------------------------------------')
 
-rev_html = soup.find_all("div", {'data-hook': "review"})
 
-Rev_String = str(rev_html)
 
-product_name = soup.find("a", {'data-hook': "product-link"}).text.strip("\n")
-reviews_title = soup.find("a", {'data-hook': "review-title"}).text.strip("\n")
+product_link = soup.find("a", {'data-hook': "product-link"}).text.strip("\n")
+reviews_title = soup.find("span", {'data-hook': "review-title"}).text.strip("\n")
 reviews_body = soup.find("span", {'data-hook': "review-body"}).text.strip("\n")
 reviews_date = soup.find("span", {'data-hook': "review-date"}).text.strip("\n")
 reviews_stars = soup.find("i", {'data-hook': "review-star-rating"}).text.strip("\n")
+helpful = soup.find("div", {'class': "cr-helpful-text"})
 
-print(f'product_name: {product_name}')
+print(f'product-link: {product_link}')
 print(f'reviews_title: {reviews_title}')
 print(f'reviews_body: {reviews_body}')
 print(f'reviews_date: {reviews_date}')
 print(f'reviews_stars: {reviews_stars}')
+print(f'helpful: {helpful}')
 
-# driver.quit()   # closes the browser
+import pandas as pd
+df = pd.DataFrame({"product-link": [product_link], "reviews_title": [reviews_title], "reviews_body": [reviews_body],
+                   "reviews_date": [reviews_date],  "reviews_stars": [reviews_stars]})
+print(df)
+df.to_csv("amazon_product.csv", index=False)
+
+
+
+
